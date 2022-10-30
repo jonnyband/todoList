@@ -1,5 +1,7 @@
 // import { Trash } from 'phosphor-react'
 
+import {TaskContainer} from "./styled"
+
 
     export function Task({ task, onDeleteTask }) {
 
@@ -8,12 +10,10 @@
     }
 
     return (
-        <>
-
-            <p>{task.content}</p>
-            <button onClick={handleDeleteTask} title="Deletar tarefa">
-                
-            </button>
-            </>
+        <TaskContainer>
+        <p>{task.content}</p>
+        <button onClick={handleDeleteTask} title="Deletar tarefa">
+        </button>
+        </TaskContainer>
     )
 }

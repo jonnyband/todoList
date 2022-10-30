@@ -1,6 +1,6 @@
 import {React, useState} from "react";
 import { Task } from "../Task";
-import { Taskbar, TaskTypePending, TaskTypeCurrent, TaskTypeDone, Content } from "./styled";
+import { Taskbar, TaskTypePending, TaskTypeCurrent, TaskTypeDone, Form } from "./styled";
 
 export function TaskColumns(){
 
@@ -60,8 +60,21 @@ export function TaskColumns(){
                         />
                     )
                 })}
-           
+           <Form onSubmit={handleCreateNewTask}>
+                <strong>Nova Tarefa</strong>
+                <textarea
+                    placeholder="Dar banho no cachorro..."
+                    required
+                    value={newTaskTxt}
+                    onChange={handleNewTask}
+                />
+
+                <footer>
+                    <button type="submit">Publicar</button>
+                </footer>
+            </Form>
 </Taskbar>
+
 </>
     )
 }
