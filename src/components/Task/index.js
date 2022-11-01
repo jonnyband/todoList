@@ -1,4 +1,4 @@
-// import { Trash } from 'phosphor-react'
+import { Trash } from 'phosphor-react'
 
 import {TaskContainer} from "./styled"
 
@@ -13,6 +13,7 @@ import {TaskContainer} from "./styled"
         <TaskContainer>
         <p>{task.content}</p>
         <button onClick={handleDeleteTask} title="Deletar tarefa">
+        <Trash size={24} />
         </button>
         </TaskContainer>
     )
