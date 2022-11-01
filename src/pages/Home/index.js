@@ -1,5 +1,5 @@
 import { Container } from "./styled";
-import { TaskColumns } from "../../components/Taskbars"
+import { TaskColumns } from "../../components/Taskbars";
 
 export function Home() {
 

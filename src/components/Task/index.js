@@ -6,7 +6,7 @@ import {TaskContainer} from "./styled"
     export function Task({ task, onDeleteTask }) {
 
     function handleDeleteTask() {
-        onDeleteTask()
+        onDeleteTask(task.id)
     }
 
     return (

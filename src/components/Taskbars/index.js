@@ -1,16 +1,11 @@
 import {React, useState} from "react";
 import { Task } from "../Task";
-import { Taskbar, TaskTypePending, TaskTypeCurrent, TaskTypeDone, Form } from "./styled";
+import { Taskbar, TaskTypePending, TaskTypeCurrent, TaskTypeDone, Form, ScrollableContainer } from "./styled";
 
 export function TaskColumns(){
 
 
-    const [tasks, setTasks] = useState([
-        {
-            id: Math.random(),
-            content: "Comentario Padrao"
-        }
-    ])
+    const [tasks, setTasks] = useState([])
 
     const [newTaskTxt, setNewTaskTxt] = useState('');
 
@@ -43,14 +38,7 @@ export function TaskColumns(){
     return(
         <>
 <Taskbar><TaskTypePending><h1>Pendente</h1></TaskTypePending>
-
-</Taskbar>    
-<Taskbar><TaskTypeCurrent><h1>Em andamento</h1></TaskTypeCurrent>
-
-
-</Taskbar>
-<Taskbar><TaskTypeDone><h1>Relizadas</h1></TaskTypeDone>
-
+<ScrollableContainer>
                 {tasks.map(task => {
                     return (
                         <Task
@@ -60,10 +48,61 @@ export function TaskColumns(){
                         />
                     )
                 })}
+                </ScrollableContainer>
            <Form onSubmit={handleCreateNewTask}>
-                <strong>Nova Tarefa</strong>
                 <textarea
-                    placeholder="Dar banho no cachorro..."
+                    placeholder="Nova tarefa..."
+                    required
+                    value={newTaskTxt}
+                    onChange={handleNewTask}
+                />
+
+                <footer>
+                    <button type="submit">Publicar</button>
+                </footer>
+            </Form>
+</Taskbar>    
+<Taskbar><TaskTypeCurrent><h1>Em andamento</h1></TaskTypeCurrent>
+<ScrollableContainer>
+                {tasks.map(task => {
+                    return (
+                        <Task
+                            key={task.id}
+                            task={task}
+                            onDeleteTask={deleteTask}
+                        />
+                    )
+                })}
+                </ScrollableContainer>
+           <Form onSubmit={handleCreateNewTask}>
+                <textarea
+                    placeholder="Nova tarefa..."
+                    required
+                    value={newTaskTxt}
+                    onChange={handleNewTask}
+                />
+
+                <footer>
+                    <button type="submit">Publicar</button>
+                </footer>
+            </Form>
+
+</Taskbar>
+<Taskbar><TaskTypeDone><h1>Relizadas</h1></TaskTypeDone>
+<ScrollableContainer>
+                {tasks.map(task => {
+                    return (
+                        <Task
+                            key={task.id}
+                            task={task}
+                            onDeleteTask={deleteTask}
+                        />
+                    )
+                })}
+                </ScrollableContainer>
+           <Form onSubmit={handleCreateNewTask}>
+                <textarea
+                    placeholder="Nova tarefa..."
                     required
                     value={newTaskTxt}
                     onChange={handleNewTask}
