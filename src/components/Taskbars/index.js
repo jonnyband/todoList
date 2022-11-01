@@ -1,20 +1,46 @@
-import {React, useState} from "react";
+import { React, useState } from "react";
 import { Task } from "../Task";
 import { Taskbar, TaskTypePending, TaskTypeCurrent, TaskTypeDone, Form, ScrollableContainer } from "./styled";
 
-export function TaskColumns(){
+export function TaskColumns() {
 
 
-    const [tasks, setTasks] = useState([])
+    const [tasks, setTasks] = useState(
+        {
+            pending: [],
+            current: [],
+            done: []
 
-    const [newTaskTxt, setNewTaskTxt] = useState('');
+        }
 
-    function handleNewTask(event) {
-        setNewTaskTxt(event.target.value)
+    );
+
+    const [newTaskTxt, setNewTaskTxt] = useState(
+
+        {
+            pending:'',
+            current:'',
+            done:''
+        }
+    
+    );
+
+    function handleNewTask(event, role) {
+        if(role === "pending"){
+        setNewTaskTxt({...newTaskTxt, pending:event.target.value})
+        }
+        else if(role === "current"){
+            setNewTaskTxt({...newTaskTxt, current:event.target.value})
+
+        }
+        else if(role === "done"){
+        setNewTaskTxt({...newTaskTxt, done:event.target.value})
+        }
     }
+    
 
 
-    function handleCreateNewTask(event) {
+    function handleCreateNewTask(event, role) {
         event.preventDefault();
 
         const NewTask = {
@@ -22,98 +48,136 @@ export function TaskColumns(){
             content: newTaskTxt,
         }
 
-        setTasks([...tasks, NewTask]);
-        setNewTaskTxt('')
+        if (role === "pending") {
+
+            const NewTask = {
+                id: Math.random(),
+                content: newTaskTxt.pending,
+            }
+
+            setTasks({ ...tasks, pending: [...tasks.pending, NewTask] });
+            setNewTaskTxt({...newTaskTxt, pending:''})
+        } else if (role === "current") {
+
+            const NewTask = {
+                id: Math.random(),
+                content: newTaskTxt.current,
+            }
+
+            setTasks({ ...tasks, current: [...tasks.current, NewTask] });
+            setNewTaskTxt({...newTaskTxt, current:''})
+        }
+        else {
+
+            const NewTask = {
+                id: Math.random(),
+                content: newTaskTxt.done,
+            }
+
+            setTasks({ ...tasks, done: [...tasks.done, NewTask] });
+            setNewTaskTxt({...newTaskTxt, done:''})
+
+        }
+
+
 
     }
 
-    function deleteTask(id) {
-        const taskWithoutDeletedOne = tasks.filter((task) => task.id !== id)
+    function deleteTask(id, role) {
 
-        setTasks(taskWithoutDeletedOne);
+        if (role === "pending") {
+            const taskWithoutDeletedOne = tasks.pending.filter((task) => task.id !== id)
+            setTasks({ ...tasks, pending: [...taskWithoutDeletedOne] });
+        }
+        else if (role === "current") {
+            const taskWithoutDeletedOne = tasks.current.filter((task) => task.id !== id)
+            setTasks({ ...tasks, current: [...taskWithoutDeletedOne] });
+        }
+       else if (role === "done") {
+            const taskWithoutDeletedOne = tasks.done.filter((task) => task.id !== id)
+            setTasks({ ...tasks, done: [...taskWithoutDeletedOne] });
+        }
     }
 
-
-
-    return(
+    return (
         <>
-<Taskbar><TaskTypePending><h1>Pendente</h1></TaskTypePending>
-<ScrollableContainer>
-                {tasks.map(task => {
-                    return (
-                        <Task
-                            key={task.id}
-                            task={task}
-                            onDeleteTask={deleteTask}
-                        />
-                    )
-                })}
+            <Taskbar><TaskTypePending><h1>Pendente</h1></TaskTypePending>
+                <ScrollableContainer>
+                    {tasks.pending.map(task => {
+                        return (
+                            <Task
+                                key={task.id}
+                                task={task}
+                                onDeleteTask={() => deleteTask(task.id, "pending")}
+                            />
+                        )
+                    })}
                 </ScrollableContainer>
-           <Form onSubmit={handleCreateNewTask}>
-                <textarea
-                    placeholder="Nova tarefa..."
-                    required
-                    value={newTaskTxt}
-                    onChange={handleNewTask}
-                />
+                <Form onSubmit={(e) => handleCreateNewTask(e, "pending")}>
+                    <textarea
+                        placeholder="Nova tarefa..."
+                        required
+                        value={newTaskTxt.pending}
+                        onChange={(e) => handleNewTask(e, "pending")}
+                    />
 
-                <footer>
-                    <button type="submit">Publicar</button>
-                </footer>
-            </Form>
-</Taskbar>    
-<Taskbar><TaskTypeCurrent><h1>Em andamento</h1></TaskTypeCurrent>
-<ScrollableContainer>
-                {tasks.map(task => {
-                    return (
-                        <Task
-                            key={task.id}
-                            task={task}
-                            onDeleteTask={deleteTask}
-                        />
-                    )
-                })}
+                    <footer>
+                        <button type="submit">Publicar</button>
+                    </footer>
+                </Form>
+            </Taskbar>
+            <Taskbar><TaskTypeCurrent><h1>Em Andamento</h1></TaskTypeCurrent>
+                <ScrollableContainer>
+                    {tasks.current.map(task => {
+                        return (
+                            <Task
+                                key={task.id}
+                                task={task}
+                                onDeleteTask={() => deleteTask(task.id, "current")}
+                            />
+                        )
+                    })}
                 </ScrollableContainer>
-           <Form onSubmit={handleCreateNewTask}>
-                <textarea
-                    placeholder="Nova tarefa..."
-                    required
-                    value={newTaskTxt}
-                    onChange={handleNewTask}
-                />
+                <Form onSubmit={(e) => handleCreateNewTask(e, "current")}>
+                    <textarea
+                        placeholder="Nova tarefa..."
+                        required
+                        value={newTaskTxt.current}
+                        onChange={(e) => handleNewTask(e, "current")}
+                    />
 
-                <footer>
-                    <button type="submit">Publicar</button>
-                </footer>
-            </Form>
+                    <footer>
+                        <button type="submit">Publicar</button>
+                    </footer>
+                </Form>
+            </Taskbar>
 
-</Taskbar>
-<Taskbar><TaskTypeDone><h1>Relizadas</h1></TaskTypeDone>
-<ScrollableContainer>
-                {tasks.map(task => {
-                    return (
-                        <Task
-                            key={task.id}
-                            task={task}
-                            onDeleteTask={deleteTask}
-                        />
-                    )
-                })}
+            <Taskbar><TaskTypeDone><h1>Relizadas</h1></TaskTypeDone>
+                <ScrollableContainer>
+                    {tasks.done.map(task => {
+                        return (
+                            <Task
+                                key={task.id}
+                                task={task}
+                                onDeleteTask={() => deleteTask(task.id, "done")}
+                            />
+                        )
+                    })}
                 </ScrollableContainer>
-           <Form onSubmit={handleCreateNewTask}>
-                <textarea
-                    placeholder="Nova tarefa..."
-                    required
-                    value={newTaskTxt}
-                    onChange={handleNewTask}
-                />
+                <Form onSubmit={(e) => handleCreateNewTask(e, "done")}>
+                    <textarea
+                        placeholder="Nova tarefa..."
+                        required
+                        value={newTaskTxt.done}
+                        onChange={(e) => handleNewTask(e, "done")}
+                    />
 
-                <footer>
-                    <button type="submit">Publicar</button>
-                </footer>
-            </Form>
-</Taskbar>
+                    <footer>
+                        <button type="submit">Publicar</button>
+                    </footer>
+                </Form>
+            </Taskbar>
 
-</>
+        </>
     )
 }
